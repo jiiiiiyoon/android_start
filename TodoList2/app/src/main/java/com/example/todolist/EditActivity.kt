@@ -11,20 +11,18 @@ import org.jetbrains.anko.yesButton
 import java.util.*
 
 class EditActivity : AppCompatActivity() {
-
-    val realm = Realm.getDefaultInstance()  //인스턴스 얻기
-
+    val realm = Realm.getDefaultInstance()
     val calendar: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout
-            .activity_edit)
+        setContentView(R.layout.activity_edit)
 
         val id = intent.getLongExtra("id", -1L)
+
         if (id == -1L) {
             insertMode()
-        } else {
+        }else {
             updateMode(id)
         }
 
@@ -34,7 +32,6 @@ class EditActivity : AppCompatActivity() {
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         }
     }
-
     private fun insertMode() {
         deleteFab.hide()
 
@@ -57,42 +54,10 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()                       // 인스턴스 해제
-    }
-
-    private fun insertTodo() {
-        realm.beginTransaction()
-
-        val newItem = realm.createObject<Todo>(nextId())
-
-        newItem.title = todoEditText.text.toString()
-        newItem.date = calendar.timeInMillis
-
-        realm.commitTransaction()
-
-        alert("내용이 추가되었습니다.") {
-            yesButton { finish() }
-        }.show()
-
-    }
-
-    private fun nextId(): Int {
-        val maxId = realm.where<Todo>().max("id")
-
-        if (maxId != null) {
-            return maxId.toInt() + 1
-        }
-        return 0
-    }
-
     private fun updateTodo(id: Long) {
         realm.beginTransaction()
 
         val updateItem = realm.where<Todo>().equalTo("id", id).findFirst()!!
-
-        updateItem.title = todoEditText.text.toString()
         updateItem.date = calendar.timeInMillis
 
         realm.commitTransaction()
@@ -112,5 +77,34 @@ class EditActivity : AppCompatActivity() {
         alert("내용이 삭제되었습니다.") {
             yesButton { finish() }
         }.show()
+    }
+
+    private fun insertTodo() {
+        realm.beginTransaction()
+
+        val newItem = realm.createObject<Todo>(nextId())
+
+        newItem.title = todoEditText.text.toString()
+        newItem.date = calendar.timeInMillis
+
+        realm.commitTransaction()
+
+        alert("내용이 추가되었습니다.") {
+            yesButton { finish() }
+        }.show()
+    }
+
+    private fun nextId(): Int {
+        val maxId = realm.where<Todo>().max("id")
+
+        if (maxId != null) {
+            return maxId.toInt() + 1
+        }
+        return 0
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 }

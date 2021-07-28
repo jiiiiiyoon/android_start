@@ -36,12 +36,12 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
-        app:tint="@color/white"
         app:backgroundTint="@android:color/holo_orange_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@color/black"
-        app:srcCompat="@drawable/ic_baseline_done_24" />
+        app:srcCompat="@drawable/ic_baseline_done_24"
+        app:tint="@color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/deleteFab"
